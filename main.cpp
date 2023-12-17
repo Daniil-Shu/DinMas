@@ -1,4 +1,5 @@
 #include <iostream>
+#include <stdexcept>
 
 using namespace std;
 
@@ -24,21 +25,22 @@ void outputArray(int* array, const size_t size);
 
 int main()
 {
-	size_t arraySize;
-
-	arraySize = inputSize();
-
-	int* array = nullptr;
-
-	array = inputArray(arraySize);
-	
-	cout << "Введенный массив:\n";
-	outputArray(array, arraySize);
-
-	if (array != nullptr)
+	try
 	{
-		delete[] array;
-		array = nullptr;
+		size_t arraySize = inputSize();
+	
+		int* array = inputArray(arraySize);
+		
+		cout << "Введенный массив:\n";
+		outputArray(array, arraySize);
+
+		if (array != nullptr)
+		{
+			delete[] array;
+			array = nullptr;
+		}
+	} catch (logic_error e){
+		cout << e.what() << '\n';
 	}
   
 	return 0;
@@ -52,11 +54,10 @@ size_t inputSize()
 
 	if (size <= 0)
 	{
-		throw runtime_error("Размер массива не может быть меньше нуля");
+		throw logic_error("Размер массива не может быть меньше нуля");
 	}
-	size_t result = static_cast<size_t>(size);
 
-	return result;
+	return static_cast<size_t>(size);
 }
 
 int* inputArray(const size_t size)
@@ -68,7 +69,7 @@ int* inputArray(const size_t size)
 	for (size_t index = 0 ; index < size; index++) {
 		if (!(cin >> array[index])) 
 		{
-			throw runtime_error("Ошибка при чтении данных");
+			throw logic_error("Ошибка при чтении данных");
 		}
 	}
 
